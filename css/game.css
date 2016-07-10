@@ -1,0 +1,13 @@
+#gameArea{
+	text-align: center;
+	margin: 0 auto;
+	width: 840px;
+}
+
+#myCanvas{
+	margin: 10px 0;
+	width: 840px;
+	height: 600px;
+	background-color: #fff;
+	border: 1px solid #000;
+}
