@@ -9,167 +9,103 @@ var Game = {
 
 //画tank
 var tankColor = new Array('#FEF26E','#BA9658');
-var tank = new Tank(18, 4, 2, tankColor);
+var tank = new Tank(30.5, 0, 2, tankColor);
+//记录tank的map下标
+var tankPos = {i: 0, j: 1};
 //记录地雷位置
 var bomePos = [];
 var pos = {x: 0, y: 0}; // 位置坐标
+//方格长宽
+var gridWidth = 30;
+var gridHeight = 26;
 
 //地图 空-e 矩形-r 雷-b
 Game.map = [
-    'reeerrrrrrrrrrrrrrrrrrrrrrrrrrr',
-    'reeeeereeeeeeeereeeeeeeereeeeer',
-    'reeeeereeeeeeeereeeeeeeereeeeer',
-    'reeerrreereereereerrrreereerrrr',
-    'reeeeeeeereereereeeeereeeeeeeer',
-    'reeeeeeeereereereeeeereeeeeeeer',
-    'rrrrrrrrrrrrreerrrreerbbrrreeer',
-    'reeeeereeeeeeeereeeeeeeereeeeer',
-    'reeeeereeeeeeeereeeeeeeereeeeer',
-    'reerrrreereereereerrrrrrreerrrr',
-    'reereeeeereereeeeeeereeeeeereer',
-    'reereeeeereereeeeeeereeeeeereer',
-    'reereerrrreereerrrrrreeerbbreer',
-    'reeeeereeeeereeeeebeeeeereeeeer',
-    'reeeeereeeeereeeeebeeeeereeeeer',
-    'reeeeereerrrrrrrrrreerrrrrrreer',
-    'rbbrrrreereeeeeeeereereeeeereer',
-    'reeeeeeeebeeeeeeeereereeeeereer',
-    'reeeeeeeebeerrrreeeeeeeereeeeer',
-    'reeerrrrrreereereeeeeeeereeeeer',
-    'reeeeeeeereereerrrrrrrrrrrrrrrr',
-    'reeeeeeeereeeeeeeeeeeeeeeeeeeee',
-    'reeeeeeeereeeeeeeeeeeeeeeeeeeee',
-    'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+    'reerrrrrrrrrrrrrrrrrrrrrrrrrrr',
+    'reeeereeeeeeeereeeeeeeereeeeer',
+    'reeeereeeeeeeereeeeeeeereeeeer',
+    'reerrreereereereerrrreereerrrr',
+    'reeeeeeereereereeeeereeeeeeeer',
+    'reeeeeeereereereeeeereeeeeeeer',
+    'rrrrrrrrrrrreerrrreerbbrrreeer',
+    'reeeereeeeeeeereeeeeeeereeeeer',
+    'reeeereeeeeeeereeeeeeeereeeeer',
+    'rerrrreereereereerrrrrrreerrrr',
+    'rereeeeereereeeeeeereeeeeereer',
+    'rereeeeereereeeeeeereeeeeereer',
+    'rereerrrreereerrrrrreeerbbreer',
+    'reeeereeeeereeeeebeeeeereeeeer',
+    'reeeereeeeereeeeebeeeeereeeeer',
+    'reeeereerrrrrrrrrreerrrrrrreer',
+    'rbbrrreereeeeeeeereereeeeereer',
+    'reeeeeeebeeeeeeeereereeeeereer',
+    'reeeeeeebeerrrreeeeeeeereeeeer',
+    'reerrrrrreereereeeeeeeereeeeer',
+    'reeeeeeereereerrrrrrrrrrrrrrrr',
+    'reeeeeeereeeeeeeeeeeeeeeeeeeee',
+    'reeeeeeereeeeeeeeeeeeeeeeeeeee',
+    'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
 ];
 
 function Tank(x, y, direct, tankColor){
     this.x = x;
     this.y = y;
-    this.speed = 4;
     this.direct = direct;
     this.color = tankColor;
 
     this.moveUp = function(){
-        var ui, uj1, uj2;
-        this.y -= this.speed;
-        if(this.y < 4){
-            this.y = 4;
-        }
-        //(map[i][j])
-        if((this.y - 4) % 6 === 0){
-            ui = (this.y - 4) / 6;
-        }
-        else{
-            ui = (this.y - 4 - (this.y - 4) % 6) / 6;
-        }
-        if((this.x - 8) % 8 === 0){
-            uj1 = (this.x - 8)/ 8;
-        }
-        else{
-            uj1 = (this.x - 8 - (this.x - 8) % 8) / 8;
-        }
-        if((this.x + 12 - 8) % 8 === 0){
-            uj2 = (this.x + 12 - 8) / 8;
-        }
-        else{
-            uj2 = (this.x + 12 - 8 - (this.x + 12 - 8) % 8) / 8;
+        //最顶上不能往上再移动
+        if(this.y < 0){
+            this.y = 0;
         }
 
-        //碰壁
-        if(Game.map[ui][uj1] === "r" || Game.map[ui][uj2] === "r"){
-            this.y = 4 + ui * 6 + 6;
+        else{
+            tankPos.i -= 1;
+            if(tankPos.i < 0){
+                tankPos.i = 0;
+            }
+            //判断是否可以往上走
+            if(Game.map[tankPos.i][tankPos.j] !== 'r'){
+                this.y -= 26;
+            }
+            else{
+                tankPos.i +=1;
+            }
         }
+
         this.direct = 0;
     }
     this.moveRight = function(){
-        var ri1, ri2, rj;
-        this.x += this.speed;
-
-        //(map[i][j])
-        if((this.y - 4) % 6 === 0){
-            ri1 = (this.y - 4) / 6;
+        tankPos.j += 1;
+        //判断是否可往右走
+        if(Game.map[tankPos.i][tankPos.j] !== 'r'){
+            this.x += 30;
         }
         else{
-            ri1 = (this.y - 4 - (this.y - 4) % 6) / 6;
-        }
-        if((this.y + 10 - 4) % 6 === 0){
-            ri2 = (this.y + 10 - 4) / 6;
-        }
-        else{
-            ri2 = (this.y + 10 - 4 - (this.y + 10 - 4) % 6) / 6;
-        }
-        if((this.x + 12 - 8) % 8 === 0){
-            rj = (this.x + 12 - 8) / 8;
-        }
-        else{
-            rj = (this.x + 12 - 8 - (this.x + 12 - 8) % 8) / 8;
-        }
-
-        //碰壁
-        if(Game.map[ri1][rj] === "r" || Game.map[ri2][rj] === "r"){
-            this.x = 8 + rj * 8 - 12;
+            tankPos.j -= 1;
         }
         this.direct = 1;
     }
     this.moveBottom = function(){
-        var bi, bj1, bj2;
-        this.y += this.speed;
-        if(this.y > 4 + 23 * 6){
-            this.y = 4 + 23 * 6;
-        }
-        //(map[i][j])
-        if((this.y + 10 - 4) % 6 === 0){
-            bi = (this.y + 10 - 4) / 6;
+        tankPos.i += 1;
+        if(Game.map[tankPos.i][tankPos.j] !== 'r'){
+             this.y += 26;
         }
         else{
-            bi = (this.y + 10 - 4 - (this.y + 10 - 4) % 6) / 6;
-        }
-        if((this.x - 8) % 8 === 0){
-            bj1 = (this.x - 8)/ 8;
-        }
-        else{
-            bj1 = (this.x - 8 - (this.x - 8) % 8) / 8;
-        }
-        if((this.x + 12 - 8) % 8 === 0){
-            bj2 = (this.x + 12 - 8) / 8;
-        }
-        else{
-            bj2 = (this.x + 12 - 8 - (this.x + 12 - 8) % 8) / 8;
-        }
-
-        //碰壁
-        if(Game.map[bi][bj1] === "r" || Game.map[bi][bj2] === "r"){
-            this.y = 4 + bi * 6 - 10;
+            tankPos.i -= 1;
         }
         this.direct = 2;   
     }
     this.moveLeft = function(){
-        var li1, li2, lj;
-        this.x -= this.speed;
-
-        //(map[i][j])
-        if((this.y - 4) % 6 === 0){
-            li1 = (this.y - 4) / 6;
+        tankPos.j -= 1;
+        if(tankPos.j < 0){
+            tankPos.j = 0;
+        }
+        if(Game.map[tankPos.i][tankPos.j] !== 'r'){
+            this.x -= 30;
         }
         else{
-            li1 = (this.y - 4 - (this.y - 4) % 6) / 6;
-        }
-        if((this.y + 10 - 4) % 6 === 0){
-            li2 = (this.y + 10 - 4) / 6;
-        }
-        else{
-            li2 = (this.y + 10 - 4 - (this.y + 10 - 4) % 6) / 6;
-        }
-        if((this.x - 8) % 8 === 0){
-            lj = (this.x - 8) / 8;
-        }
-        else{
-            lj = (this.x - 8 - (this.x - 8) % 8) / 8;
-        }
-
-        //碰壁
-        if(Game.map[li1][lj] === "r" || Game.map[li2][lj] === "r"){
-            this.x = 8 + lj * 8 + 8;
+            tankPos.j += 1;
         }
         this.direct = 3;
         
@@ -181,48 +117,48 @@ function drawTank(tank){
         case 0:
         case 2:
             Game.canvasContext.fillStyle = tank.color[0];
-            Game.canvasContext.fillRect(tank.x, tank.y, 3, 10);
-            Game.canvasContext.fillRect(tank.x + 9, tank.y, 3, 10);
-            Game.canvasContext.fillRect(tank.x + 3, tank.y + 2, 6, 6);
+            Game.canvasContext.fillRect(tank.x, tank.y, 8, 26);
+            Game.canvasContext.fillRect(tank.x + 22, tank.y, 8, 26);
+            Game.canvasContext.fillRect(tank.x + 8, tank.y + 6, 14, 14);
             //需要注意,画圆的时候需要重新开启路径
             
             Game.canvasContext.fillStyle = tank.color[1];
             Game.canvasContext.beginPath();
-            Game.canvasContext.arc(tank.x + 6, tank.y + 5, 1, 0, Math.PI*2, true);
+            Game.canvasContext.arc(tank.x + 15, tank.y + 13, 4, 0, Math.PI*2, true);
             Game.canvasContext.closePath();
             Game.canvasContext.fill();
 
             //画出炮筒(直线)
             Game.canvasContext.strokeStyle = tank.color[1];
             Game.canvasContext.lineWidth = 2;
-            Game.canvasContext.moveTo(tank.x + 6, tank.y + 5);
+            Game.canvasContext.moveTo(tank.x + 15, tank.y + 13);
             if(tank.direct == 0){
-                Game.canvasContext.lineTo(tank.x + 6, tank.y);
+                Game.canvasContext.lineTo(tank.x + 15, tank.y);
             }else if(tank.direct == 2){
-                Game.canvasContext.lineTo(tank.x + 6, tank.y + 10);
+                Game.canvasContext.lineTo(tank.x + 15, tank.y + 26);
             }
             Game.canvasContext.stroke();
         break;
         case 1:
         case 3:
             Game.canvasContext.fillStyle = tank.color[0];
-            Game.canvasContext.fillRect(tank.x, tank.y, 12, 2);
-            Game.canvasContext.fillRect(tank.x, tank.y + 8, 12, 2);
-            Game.canvasContext.fillRect(tank.x + 3, tank.y + 2, 6, 6);
+            Game.canvasContext.fillRect(tank.x, tank.y, 30, 6);
+            Game.canvasContext.fillRect(tank.x, tank.y + 20, 30, 6);
+            Game.canvasContext.fillRect(tank.x + 8, tank.y + 6, 14, 14);
             //需要注意,画圆的时候需要重新开启路径
             Game.canvasContext.fillStyle = tank.color[1];
             Game.canvasContext.beginPath();
-            Game.canvasContext.arc(tank.x + 6, tank.y + 5, 1, 0, Math.PI*2, true);
+            Game.canvasContext.arc(tank.x + 15, tank.y + 13, 4, 0, Math.PI*2, true);
             Game.canvasContext.closePath();
             Game.canvasContext.fill();
             //画出炮筒(直线)
             Game.canvasContext.strokeStyle = tank.color[1];
             Game.canvasContext.lineWidth = 2;
-            Game.canvasContext.moveTo(tank.x + 6, tank.y + 5);
+            Game.canvasContext.moveTo(tank.x + 15, tank.y + 13);
             if(tank.direct == 1){
-                Game.canvasContext.lineTo(tank.x + 12, tank.y + 5);
+                Game.canvasContext.lineTo(tank.x + 30, tank.y + 13);
             }else if(tank.direct == 3){
-                Game.canvasContext.lineTo(tank.x, tank.y + 5);
+                Game.canvasContext.lineTo(tank.x, tank.y + 13);
             }
             Game.canvasContext.stroke();
         break;
@@ -267,25 +203,53 @@ Game.update = function(){
 };
 
 Game.draw = function(){
-	//画地图
-	Game.canvasContext.fillStyle = "#A9A9A9";
-	var x = 8, y = 4;
-	//遍历map
-	for(var i = 0; i < Game.map.length; i++){
-		x = 8;
-		for(var j = 0; j < Game.map[i].length; j++){
-			if(Game.map[i][j] === 'r'){
-				Game.canvasContext.fillRect(x, y, 8, 6);
-			}
-			else if(Game.map[i][j] === 'b'){
-				pos.x = x;
-				pos.y = y;
-				bomePos.push(pos);
-			}
-			x += 8;
-		}
-		y += 6;
-	}
+    //填充矩形
+    Game.canvasContext.fillStyle = "#cccccc";
+    var x = gridWidth + 0.5, y = 0;
+    //遍历map
+    for(var i = 0; i < Game.map.length; i++){
+        x = gridWidth + 0.5;
+        for(var j = 1; j < Game.map[i].length; j++){
+            if(Game.map[i][j] === 'r'){
+                Game.canvasContext.fillRect(x, y, gridWidth, gridHeight);
+            }
+            else if(Game.map[i][j] === 'b'){
+                pos.x = x;
+                pos.y = y;
+                bomePos.push(pos);
+            }
+            x += gridWidth;
+        }
+        y += gridHeight;
+    }
+
+    y = 0;
+    for(i = 0; i < Game.map.length; i++){
+        Game.canvasContext.fillRect(0, y, gridWidth, gridHeight);
+        y += gridHeight;
+    }
+
+    Game.canvasContext.stroke();
+    
+	//画网格线
+     for(var i = gridWidth + 0.5; i < Game.canvas.width; i += gridWidth){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(i, 0);
+        Game.canvasContext.lineTo(i, Game.canvas.height);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
+    for(var i = gridHeight + 0.5;i < Game.canvas.height; i += gridHeight){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(0, i);
+        Game.canvasContext.lineTo(Game.canvas.width, i);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
 
 	//画tank
 	drawTank(tank);
