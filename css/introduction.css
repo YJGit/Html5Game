@@ -18,6 +18,7 @@
 }
 
 .fade-out{
+  opacity: 1;
   animation: fadeIn 1s ease-in forwards reverse;
 }
 
