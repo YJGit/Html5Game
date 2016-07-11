@@ -5,11 +5,47 @@
 	  	<meta name="viewport" content="width=device-width initial-scale=1.0">
 		<title>Game</title>
 		<link rel="stylesheet" type="text/css" href="css/game.css">
+        <link rel="stylesheet" type="text/css" href="css/loading.css">
+        <link rel="stylesheet" type="text/css" href="css/introduction.css">
 	</head>
 	<body>
+      
+      <div id="loading">
+        <div class="loading-pic">
+          <img src="img/ninja.png">
+          <div class="banner">
+            <div class="button-left">+</div>
+            <div class="button-right">+</div>
+            <h1>Maze Game</h1>
+            <p>Begining Soon ...</p>
+            <div class="loading-bar">
+              <div class="progress"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div id="introduction">
+        <div class="intro-board">
+          <img class="logo-left" src="img/ninja.png">
+          <img class="logo-right" src="img/ninja.png">
+          <div class="paste-left"></div>
+          <div class="paste-right"></div>
+          <div class="intro-info">
+            <h1><span>Game Rules</span></h1>
+            <p><span>Every time you get the chance to go ahead, use the Step Button to decide how many steps you can take.</span></p>
+            <p><span>There would be some questions in the grids you stay, try hard to answer them so that you can get the award money</span>.</p>
+            <p><span>There would also be some bombs in the grids, if you unluckily stay in it, your life would be decreased.</span></p>
+            <p><span>Now, it is time for you to start the exciting adventure!~~</span></p>
+          </div>
+          <div class="intro-button">I Knew It</div>
+        </div>
+      </div>
 		<div id="gameArea">
 			<canvas id="myCanvas" width="900px" height="624px"></canvas>
 		</div>
+     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+     <script src="js/introduction.js"></script>  
 	</body>
 	<script type="text/javascript" src="js/game.js">你的浏览器不支持canvas</script>
 </html>
