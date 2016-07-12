@@ -17,11 +17,6 @@
   opacity: 0;
 }
 
-.fade-out{
-  opacity: 1;
-  animation: fadeIn 1s ease-in forwards reverse;
-}
-
 @keyframes fadeIn{
   from{
     opacity: 0;
@@ -38,7 +33,7 @@
   border: 30px solid #F65E3B;
   border-radius: 10px;
   margin: auto;
-  margin-top: 7%;
+  margin-top: 4%;
 }
 
 .intro-board .logo-left{
@@ -113,7 +108,7 @@
 }
 
 .intro-button:hover{
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #FFB56A;
 }
 
 

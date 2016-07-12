@@ -1,53 +1,84 @@
 <!doctype html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	  <meta name="viewport" content="width=device-width initial-scale=1.0">
-		<title>Game</title>
-		<link rel="stylesheet" type="text/css" href="css/game.css">
-    <link rel="stylesheet" type="text/css" href="css/loading.css">
-    <link rel="stylesheet" type="text/css" href="css/introduction.css">
-	</head>
-	<body>
-     
-      <div id="loading">
-        <div class="loading-pic">
-          <img src="img/ninja.png">
-          <div class="banner">
-            <div class="button-left">+</div>
-            <div class="button-right">+</div>
-            <h1>Maze Game</h1>
-            <p>Beginning Soon ...</p>
-            <div class="loading-bar">
-              <div class="progress"></div>
-            </div>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width initial-scale=1.0">
+  <title>Game</title>
+  <link rel="stylesheet" type="text/css" href="css/base.css">
+  <link rel="stylesheet" type="text/css" href="css/game.css">
+  <!--<link rel="stylesheet" type="text/css" href="css/loading.css">-->
+  <!--<link rel="stylesheet" type="text/css" href="css/introduction.css">-->
+  <link rel="stylesheet" type="text/css" href="css/step.css">  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
+  </head>
+  <body>
+    
+    <!-- This part controls the loading page -->
+    <!--
+    <div id="loading">
+      <div class="loading-pic">
+        <img src="img/ninja.png">
+        <div class="banner">
+          <div class="button-left">+</div>
+          <div class="button-right">+</div>
+          <h1>Maze Game</h1>
+          <p>Beginning Soon ...</p>
+          <div class="loading-bar">
+            <div class="progress"></div>
           </div>
         </div>
       </div>
-     
-
-      <div id="introduction">
-        <div class="intro-board">
-          <img class="logo-left" src="img/ninja.png">
-          <img class="logo-right" src="img/ninja.png">
-          <div class="paste-left"></div>
-          <div class="paste-right"></div>
-          <div class="intro-info">
-            <h1><span>Game Rules</span></h1>
-            <p><span>Every time you get the chance to go ahead, use the Step Button to decide how many steps you can take.</span></p>
-            <p><span>There would be some questions in the grids you stay, try hard to answer them so that you can get the award money</span>.</p>
-            <p><span>There would also be some bombs in the grids, if you unluckily stay in it, your life would be decreased.</span></p>
-            <p><span>Now, it is time for you to start the exciting adventure!~~</span></p>
-          </div>
-          <div class="intro-button">I Knew It</div>
+    </div>
+    -->
+    <!-- This part controls the introduction page -->
+    <!--
+    <div id="introduction">
+      <div class="intro-board">
+        <img class="logo-left" src="img/ninja.png">
+        <img class="logo-right" src="img/ninja.png">
+        <div class="paste-left"></div>
+        <div class="paste-right"></div>
+        <div class="intro-info">
+          <h1><span>Game Rules</span></h1>
+          <p><span>Every time you get the chance to go ahead, use the Step Button to decide how many steps you can take.</span></p>
+          <p><span>There would be some questions in the grids you stay, try hard to answer them so that you can get the award money</span>.</p>
+          <p><span>There would also be some bombs in the grids, if you unluckily stay in it, your life would be decreased.</span></p>
+          <p><span>Now, it is time for you to start the exciting adventure!~~</span></p>
         </div>
+        <div class="intro-button">I Knew It</div>
       </div>
+    </div>
+    -->
+    
+    
+    <input id="step-button" type="submit" class="btn btn-success btn-large" value="Random Step"/>
+    
+    <ul class="flip-cards">
+      <li>
+        <input class="front" style="background: #267df4" value="?"/>
+        <input class="back" style="background: #4c8fea" value=""/>
+      </li>
+      <li>
+        <input class="front" style="background: #9126f4" value="?"/>
+        <input class="back" style="background: #a144f7" value=""/>
+      </li>
+      <li>
+        <input class="front" style="background: #21bf3b" value="?"/>
+        <input class="back" style="background: #4dd763" value=""/>
+      </li>
+      <li>
+        <input class="front" style="background: #c3333d" value="?"/>
+        <input class="back" style="background: #e74853" value=""/>
+      </li>
+    </ul>
+  
+    <div id="gameArea">
+      <canvas id="myCanvas" width="900px" height="1300px"></canvas>
+    </div>
 
-		<div id="gameArea">
-			<canvas id="myCanvas" width="900px" height="1300px"></canvas>
-		</div>
-     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-     <script src="js/introduction.js"></script>  
-	</body>
-	<script type="text/javascript" src="js/game.js">你的浏览器不支持canvas</script>
+    <script src="js/jquery-1.12.3.js"></script>
+    <script src="js/introduction.js"></script>
+    <script src="js/step.js"></script>  
+    <script type="text/javascript" src="js/game.js">你的浏览器不支持canvas</script>  
+  </body>
 </html>
