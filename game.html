@@ -3,31 +3,29 @@
   <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width initial-scale=1.0">
-  <title>Game</title>
+  <title>Maze Game For Front-end Tests</title>
   <link rel="stylesheet" type="text/css" href="css/base.css">
   <link rel="stylesheet" type="text/css" href="css/game.css">
-  <!--<link rel="stylesheet" type="text/css" href="css/loading.css">-->
-  <!--<link rel="stylesheet" type="text/css" href="css/introduction.css">-->
+  <link rel="stylesheet" type="text/css" href="css/loading.css">
+  <link rel="stylesheet" type="text/css" href="css/introduction.css">
+  <link rel="stylesheet" type="text/css" href="css/clock.css"> 
   <link rel="stylesheet" type="text/css" href="css/step.css">
-
   <link rel="stylesheet" type="text/css" href="css/question.css">    
 
   <link rel="stylesheet" type="text/css" href="css/stepHint.css">  
   <link rel="stylesheet" type="text/css" href="css/life.css">
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
   </head>
   <body>
     
     <!-- This part controls the loading page -->
-    <!--
+    
     <div id="loading">
       <div class="loading-pic">
         <img src="img/ninja.png">
         <div class="banner">
           <div class="button-left">+</div>
           <div class="button-right">+</div>
-          <h1>Maze Game</h1>
+          <h1>Maze Game For Front-end</h1>
           <p>Beginning Soon ...</p>
           <div class="loading-bar">
             <div class="progress"></div>
@@ -35,9 +33,9 @@
         </div>
       </div>
     </div>
-    -->
+    
     <!-- This part controls the introduction page -->
-    <!--
+    
     <div id="introduction">
       <div class="intro-board">
         <img class="logo-left" src="img/ninja.png">
@@ -46,40 +44,27 @@
         <div class="paste-right"></div>
         <div class="intro-info">
           <h1><span>Game Rules</span></h1>
-          <p><span>Every time you get the chance to go ahead, use the Step Button to decide how many steps you can take.</span></p>
-          <p><span>There would be some questions in the grids you stay, try hard to answer them so that you can get the award money</span>.</p>
-          <p><span>There would also be some bombs in the grids, if you unluckily stay in it, your life would be decreased.</span></p>
-          <p><span>Now, it is time for you to start the exciting adventure!~~</span></p>
+          <p><span>Try to pass the maze with 3 lives as soon as possible.</span></p>
+          <p><span>There will be landmines, CSS and Javascript Questions beneath some of the small quares.</span></p>
+          <p><span>Every time you get close to the landmine, you will be asked to answer questions on CSS or JS.</span></p>
+          <p><span>Answer the questions correctly and you will be guided to a safer square. Otherwise, choose ways yourself.</span></p>
+          <p><span>Wish you a good job on the coming maze adventure!~~</span></p>
         </div>
-        <div class="intro-button">I Knew It</div>
+        <div class="intro-button">X</div>
       </div>
+    </div>
+    
+    <!--
+    <div id="clock">
+      <div class="left-rope"></div>
+      <div class="right-rope"></div>
+      <div class="time-show"></div>
     </div>
     -->
     
     <!-- This is the part for choosing steps -->
     
     <input id="step-button" type="submit" class="btn btn-success btn-large" value="Random Step"/>
-    
-    <!--
-    <ul class="flip-cards">
-      <li>
-        <input class="front" style="background: #267df4" value="?"/>
-        <input class="back" style="background: #4c8fea" value=""/>
-      </li>
-      <li>
-        <input class="front" style="background: #9126f4" value="?"/>
-        <input class="back" style="background: #a144f7" value=""/>
-      </li>
-      <li>
-        <input class="front" style="background: #21bf3b" value="?"/>
-        <input class="back" style="background: #4dd763" value=""/>
-      </li>
-      <li>
-        <input class="front" style="background: #c3333d" value="?"/>
-        <input class="back" style="background: #e74853" value=""/>
-      </li>
-    </ul>
-    -->
     
     <!-- This is the part for answering questions -->
     
@@ -103,10 +88,6 @@
         </div>
       </div>
     </div>
-    
-    <span id="laber-hint">
-      You Can Walk 4 Steps
-    </span>
 
     <span id="tank-life">
       Life:

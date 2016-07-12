@@ -1,11 +1,5 @@
-*{
-  padding: 0px;
-  margin: 0px;
-  font-family: Calibri, sans-serif;
-  color: #333;
-}
-
 #introduction{
+  z-index: 3;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -28,32 +22,32 @@
 
 .intro-board{
   position: relative;
-  width: 35%;
-  height: 70%;
-  border: 30px solid #F65E3B;
+  width: 600px;
+  height: 500px;
+  border: 20px solid #F65E3B;
   border-radius: 10px;
   margin: auto;
-  margin-top: 4%;
+  margin-top: 80px;
 }
 
 .intro-board .logo-left{
   position: absolute;
-  top: -83px;
+  top: -90px;
   left: -160px;
   transform: rotateZ(-45deg);
 }
 
 .intro-board .logo-right{
   position: absolute;
-  top: -83px;
+  top: -90px;
   right: -160px;
   transform: rotateZ(45deg) rotateY(180deg);
 }
 
 .paste-left, .paste-right{
   position: absolute;
-  width: 260px;
-  height: 36px;
+  width: 230px;
+  height: 30px;
   border-radius: 10px;
   top: -38px;
   background-color: #333;
@@ -78,37 +72,36 @@
 
 .intro-info > *{
   flex: 1;
-  font-size: 20px;
   display: flex;
   align-items: center;
 }
 
 .intro-info h1{
+  justify-content: center;
+}
+
+.intro-info h1 span{
   font-size: 30px;
+  text-indent: 0;
 }
 
 .intro-info span{
-  display: block;
-  margin: auto;
   color: white;
-  text-align: center;
+  text-align: left;
+  text-indent: 2em;
 }
 
 .intro-button{
   position: absolute;
-  width: 20%;
-  padding: 10px;
-  font-size: 20px;
+  display: inline-block;
+  top: 10px;
+  right: 10px;
   color: white;
-  background-color: #F65E3B;
-  border-radius: 10px;
-  bottom: -90px;
-  right: 0px;
   cursor: pointer;
 }
 
 .intro-button:hover{
-  background-color: #FFB56A;
+  color: #F65E3B;
 }
 
 

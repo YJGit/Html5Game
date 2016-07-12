@@ -1,3 +1,3 @@
 $(".intro-button").on('click', function(){
-  $(this).closest("#introduction").fadeOut('fast');
+  $(this).closest("#introduction").fadeOut();
 });
