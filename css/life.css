@@ -1,0 +1,17 @@
+#tank-life{
+  position: fixed;
+  top: 40%;
+  right: 140px;
+  font-size: 15px;
+}
+
+#tank-pic{
+  position: fixed;
+  top: 40%;
+}
+
+#tank-pic img{
+	display: inline-block;
+	background-color: #FF1493;
+	margin-left: 2px;
+}
