@@ -8,11 +8,9 @@ var Game = {
 };
 
 //画tank
-var tankColor = new Array('#FEF26E','#BA9658');
-var tank = new Tank(30.5, 0, 2, {i:0, j: 1}, tankColor);
+var player = new play(30.5, 0, 2, {i:0, j: 1});
 //记录地雷位置
 var boom = {
-    booePos: null,
     boomMusic: null
 };
 
@@ -23,92 +21,285 @@ var gridHeight = 26;
 //爆炸效果
 var booms={}; 
 var boomsHavBo = false;  //标志是否已经炸过
-var footStep = 10000; 
+var footStep = 10000;
+var playerLife = 3;
+var playerAlive = true; //标志tank是否复活完成或者存活
+
+/*
+*游戏地图绘制
+*/
 
 //地图 空-e 矩形-r 雷-b
 Game.map = [
     'reerrrrrrrrrrrrrrrrrrrrrrrrrrr',
-    'reeeereeeeeeeereeeeeeeereeeeer',
-    'reeeereeeeeeeereeeeeeeereeeeer',
+    'reeeereeeeeeeereeqbeeeereeeeor',
+    'reeeereeeeeeeereeqeebeereeeeer',
     'reerrreereereereerrrreereerrrr',
     'reeeeeeereereereeeeereeeeeeeer',
-    'reeeeeeereereereeeeereeeeeeeer',
-    'rrrrrrrrrrrreerrrreerbbrrreeer',
-    'reeeereeeeeeeereeeeeeeereeeeer',
-    'reeeereeeeeeeereeeeeeeereeeeer',
+    'reeeeeeereerqqreeeeereeeeeeeer',
+    'rrrrrrrrrrrrebrrrreerbbrrreeer',
+    'reeeereeeeeeeereeeeeeqqreeeeer',
+    'reeeoreeeeeeeereeeeeeeereeeeer',
     'rerrrreereereereerrrrrrreerrrr',
     'rereeeeereereeeeeeereeeeeereer',
-    'rereeeeereereeeeeeereeeeeereer',
+    'rereeeeereereeeeeeereeeeqqreer',
     'rereerrrreereerrrrrreeerbbreer',
-    'reeeereeeeereeeeebeeeeereeeeer',
-    'reeeereeeeereeeeebeeeeereeeeer',
-    'reeeereerrrrrrrrrreerrrrrrreer',
+    'reeeereeeeereeeeqbeeeeereeeeer',
+    'reeeereeeeereeeeqbeeeeereeeeer',
+    'rqqeereerrrrrrrrrreerrrrrrreer',
     'rbbrrreereeeeeeeereereeeeereer',
-    'reeeeeeebeeeeeeeereereeeeereer',
-    'reeeeeeebeerrrreeeeeeeereeeeer',
+    'reeeeeeqbeeeeeeebreereeeeereer',
+    'reeeeeeqbeerrrrqqeeeeeereeeeer',
     'reerrrrrreereereeeeeeeereeeeer',
     'reeeeeeereereerrrrrrrrrrrrrrrr',
     'reeeeeeereeeeeeeeeeeeeeeeeeeer',
     'reeeeeeereeeeeeeeeeeeeeeeeeeer',
     'rrrrrrrrrrrrrrrrrrrrrrrrrrreer',
-    'reeeeeeeeebeereeeeeeeeeeeereer',
-    'reeeeeeeeebeereeeeeeeeeeeereer',
-    'reerrrrrrrreereerrrrrrrreeeeer',
+    'reeeeeeeeebeereeeeeeeeeeeerqqr',
+    'reeeeeeeeebeereeeeeeeeeeeerber',
+    'reerrrrrrrrqqreerrrrrrrreeeeer',
     'reereeeeeeeeereeeeeereereeeeer',
     'reereeeeeeeeereeeeeereerrrreer',
     'reereerrrrrrrrrrrreereeeeereer',
     'reereeeeeeeeeeeeeeeereeeeereer',
     'reereeeeeeeeeeeeeeeereeeeereer',
     'reerrrrrrrrrrrrrrrrrreereereer',
-    'reereeeeeeeeeeeeereeeeereeeeer',
-    'reereeeeeeeeeeeeereeeeereeeeer',
+    'reereebqeeeeeeeeereeeeereeeeer',
+    'reereeeqeeeeeeeeereeeeereeeeer',
     'reeeeereeeeerrreereerrrrrrrrrr',
     'reeeeereeeeeeereereereeeeeeeer',
     'reerrrrrrrrreereereerrrrrrreer',
-    'reereereeeereereereeeeeeeeeeer',
-    'reeeeereeeeeeereereeeeeeeeeeer',
+    'reereereqeereereereeeeeeeeeeer',
+    'reeeeereqeeeeereereeeeeeeeeeer',
     'reeeeerbreeeeereerrrrrrrrrreer',
-    'rrrreeeerrrrrrreeeeeeeeeeereer',
-    'reeeeeeereeeeeeeerreeeerrrreer',
+    'rrrreeeerrrrrrrbeeeeeeeeeereer',
+    'reeeeeeereeeeeeqqrreeeerrrreer',
     'reeeeeeereeeeeeeereeeeereeeeer',
     'reerrrrrreerrrreerrrreereerrrr',
-    'reereeeereeeeereeeeerrrreereer',
-    'reereeeerrreeerbbreeeeeeeeeeer',
-    'reereeeeeeeeeeeeereeeeeeeeeeer',
-    'reereeeeeeeeeeeeereeeeeeeeeeer',
+    'rqqroeeereeeeereeeeerrrreereer',
+    'rebreeeerrreeereereeeeeeeeeeer',
+    'rebreeeeeeeeeeeeereeeeeeeeeeer',
+    'rebreeeeeeeeeeeeereeeeeeeeeeer',
     'reerrrrrrrrrrrrrrrrrrrrrrrrrrr'
 ];
 
+function drawMap(){
+    //填充矩形
+    Game.canvasContext.fillStyle = "#cccccc";
+    var x = gridWidth + 0.5, y = 0;
+    //遍历map
+    for(var i = 0; i < Game.map.length; i++){
+        x = gridWidth + 0.5;
+        for(var j = 1; j < Game.map[i].length; j++){
+            //画矩形
+            if(Game.map[i][j] === 'r'){
+                Game.canvasContext.strokeStyle = "#000";
+                Game.canvasContext.fillRect(x, y, gridWidth, gridHeight);
+                Game.canvasContext.beginPath();
+                Game.canvasContext.moveTo(x, y);
+                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
+                Game.canvasContext.moveTo(x, y + gridHeight);
+                Game.canvasContext.lineTo(x + gridWidth, y);
+                Game.canvasContext.moveTo(x, y);
+                Game.canvasContext.lineTo(x + gridWidth, y);
+                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
+                Game.canvasContext.lineTo(x, y + gridHeight);
+                Game.canvasContext.lineTo(x, y);
+                Game.canvasContext.closePath();
+                Game.canvasContext.stroke();
+            }
+            //画炸弹
+            else if(Game.map[i][j] === 'b'){
+                Game.canvasContext.fillRect(x, y, gridWidth / 2, gridHeight / 2);
+                Game.canvasContext.stroke();
+            }
+            //画问题区
+            else if(Game.map[i][j] === 'q'){
+                Game.canvasContext.fillRect(x, y, gridWidth / 4, gridHeight / 4);
+                Game.canvasContext.stroke();
+                //画雷区提示范围
+                if(Game.map[i + 1][j] === 'q'){
+                    if(Game.map[i][j + 1] === 'b'){
+                        if(Game.map[i + 1][j + 3] === 'b'){
+                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                            Game.canvasContext.beginPath();
+                            Game.canvasContext.moveTo(x + gridWidth, y);
+                            Game.canvasContext.lineTo(x + gridWidth, y + gridHeight * 2);
+                            Game.canvasContext.moveTo(x + gridWidth * 4, y);
+                            Game.canvasContext.lineTo(x + gridWidth * 4, y + gridHeight * 2);
+                            Game.canvasContext.closePath();
+                            Game.canvasContext.stroke();
+                        }
+                        else{
+                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                            Game.canvasContext.beginPath();
+                            Game.canvasContext.moveTo(x + gridWidth, y);
+                            Game.canvasContext.lineTo(x + gridWidth, y + gridHeight * 2);
+                            Game.canvasContext.moveTo(x + gridWidth * 2, y);
+                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 2);
+                            Game.canvasContext.closePath();
+                            Game.canvasContext.stroke();
+                        }
+                    }
+                    else if(Game.map[i + 2][j - 1] === 'b'){
+                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                        Game.canvasContext.beginPath();
+                        Game.canvasContext.moveTo(x, y + gridHeight * 2);
+                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 2);
+                        Game.canvasContext.moveTo(x, y + gridHeight * 3);
+                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 3);
+                        Game.canvasContext.closePath();
+                        Game.canvasContext.stroke();
+                    }
+                    else if(Game.map[i][j - 1] === 'b'){
+                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                        Game.canvasContext.beginPath();
+                        Game.canvasContext.moveTo(x, y);
+                        Game.canvasContext.lineTo(x, y + gridHeight * 2);
+                        Game.canvasContext.moveTo(x - gridWidth, y);
+                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 2);
+                        Game.canvasContext.closePath();
+                        Game.canvasContext.stroke();
+                    }
+                }
+                else if(Game.map[i][j + 1] === 'q'){
+                    if(Game.map[i + 1][j + 1] === 'b' || Game.map[i + 1][j] === 'b'){
+                        if(Game.map[i + 3][j + 1] === 'b'){
+                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                            Game.canvasContext.beginPath();
+                            Game.canvasContext.moveTo(x, y + gridHeight);
+                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight);
+                            Game.canvasContext.moveTo(x, y + gridHeight * 4);
+                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 4);
+                            Game.canvasContext.closePath();
+                            Game.canvasContext.stroke();
+                        }
+                        else{
+                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                            Game.canvasContext.beginPath();
+                            Game.canvasContext.moveTo(x, y + gridHeight);
+                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight);
+                            Game.canvasContext.moveTo(x, y + gridHeight * 2);
+                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 2);
+                            Game.canvasContext.closePath();
+                            Game.canvasContext.stroke();
+                        }
+                    }
+                    else if(Game.map[i - 1][j] === 'b' || Game.map[i - 1][j + 1] === 'b'){
+                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                        Game.canvasContext.beginPath();
+                        Game.canvasContext.moveTo(x, y);
+                        Game.canvasContext.lineTo(x + gridWidth * 2, y);
+                        Game.canvasContext.moveTo(x, y - gridHeight);
+                        Game.canvasContext.lineTo(x + gridWidth * 2, y - gridHeight);
+                        Game.canvasContext.closePath();
+                        Game.canvasContext.stroke();
+                    }
+                    else if(Game.map[i - 1][j - 1] === 'b'){
+                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
+                        Game.canvasContext.beginPath();
+                        Game.canvasContext.moveTo(x, y);
+                        Game.canvasContext.lineTo(x, y - gridHeight * 2);
+                        Game.canvasContext.moveTo(x - gridWidth, y);
+                        Game.canvasContext.lineTo(x - gridWidth, y - gridHeight * 2);
+                        Game.canvasContext.closePath();
+                        Game.canvasContext.stroke();
+                    }
+                }
+            }
+            x += gridWidth;
+        }
+        y += gridHeight;
+    }
+
+    y = 0;
+    for(i = 0; i < Game.map.length; i++){
+        Game.canvasContext.fillRect(0, y, gridWidth, gridHeight);
+        Game.canvasContext.beginPath();
+        Game.canvasContext.moveTo(0, y);
+        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
+        Game.canvasContext.moveTo(0, y + gridHeight);
+        Game.canvasContext.lineTo(gridWidth, y);
+        Game.canvasContext.moveTo(0, y);
+        Game.canvasContext.lineTo(gridWidth, y);
+        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
+        Game.canvasContext.lineTo(0, y + gridHeight);
+        Game.canvasContext.lineTo(0, y);
+        Game.canvasContext.closePath();
+        y += gridHeight;
+        Game.canvasContext.stroke();
+    }
+    
+    //画网格线
+     for(var i = gridWidth + 0.5; i < Game.canvas.width; i += gridWidth){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(i, 0);
+        Game.canvasContext.lineTo(i, Game.canvas.height);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
+    for(var i = gridHeight + 0.5;i < Game.canvas.height; i += gridHeight){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(0, i);
+        Game.canvasContext.lineTo(Game.canvas.width, i);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
+}
+
 /*
-*绘制坦克及坦克移动函数
+*动态调整显示step
+*及生命
 */
-function Tank(x, y, direct, pos, tankColor){
+function changeShowSteps(){
+    var steps = document.getElementById("laber-hint");
+    steps.innerHTML = "You can Walk " + footStep + " Steps";
+}
+
+function changeShowLife(){
+    var life = document.getElementById("tank-pic");
+    life.innerHTML = "";
+    for(var i = 0; i < playerLife; i++){
+        life.innerHTML += "<img src='img/ninja1.png'/>";
+    }
+}
+
+/*
+*绘制坦克
+*及坦克移动函数
+*坦克复活函数
+*/
+function play(x, y, direct, pos){
     this.x = x;
     this.y = y;
     this.direct = direct;
     this.pos = pos;
-    this.color = tankColor;
 
     this.moveUp = function(){
-        //最顶上不能往上再移动
-        if(this.y < 0){
-            this.y = 0;
+        this.pos.i -= 1;
+        if(this.pos.i < 0){
+            this.pos.i = 0;
         }
-
         else{
-            this.pos.i -= 1;
-            if(this.pos.i < 0){
-                this.pos.i = 0;
-            }
             //判断是否可以往上走
             if(Game.map[this.pos.i][this.pos.j] !== 'r'){
                 this.y -= 26;
+                //最顶上不能往上再移动
+                if(this.y < 0){
+                    this.y = 0;
+                }
+                footStep--;
+                changeShowSteps();
             }
             else{
                 this.pos.i +=1;
             }
         }
-
+        
         this.direct = 0;
     }
     this.moveRight = function(){
@@ -116,6 +307,8 @@ function Tank(x, y, direct, pos, tankColor){
         //判断是否可往右走
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
             this.x += 30;
+            footStep--;
+            changeShowSteps();
         }
         else{
             this.pos.j -= 1;
@@ -125,7 +318,9 @@ function Tank(x, y, direct, pos, tankColor){
     this.moveBottom = function(){
         this.pos.i += 1;
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
-             this.y += 26;
+            this.y += 26;
+            footStep--;
+            changeShowSteps();
         }
         else{
             this.pos.i -= 1;
@@ -139,6 +334,8 @@ function Tank(x, y, direct, pos, tankColor){
         }
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
             this.x -= 30;
+            footStep--;
+            changeShowSteps();
         }
         else{
             this.pos.j += 1;
@@ -146,87 +343,56 @@ function Tank(x, y, direct, pos, tankColor){
         this.direct = 3;
         
     }
+    this.img = new Image(30, 26);
+    this.img.src = "img/player.png";
 }
 
-function drawTank(tank){
-    switch(tank.direct){
-        case 0:
-        case 2:
-            Game.canvasContext.fillStyle = tank.color[0];
-            Game.canvasContext.fillRect(tank.x, tank.y, 8, 26);
-            Game.canvasContext.fillRect(tank.x + 22, tank.y, 8, 26);
-            Game.canvasContext.fillRect(tank.x + 8, tank.y + 6, 14, 14);
-            //需要注意,画圆的时候需要重新开启路径
-            
-            Game.canvasContext.fillStyle = tank.color[1];
-            Game.canvasContext.beginPath();
-            Game.canvasContext.arc(tank.x + 15, tank.y + 13, 4, 0, Math.PI*2, true);
-            Game.canvasContext.closePath();
-            Game.canvasContext.fill();
-
-            //画出炮筒(直线)
-            Game.canvasContext.strokeStyle = tank.color[1];
-            Game.canvasContext.lineWidth = 2;
-            Game.canvasContext.moveTo(tank.x + 15, tank.y + 13);
-            if(tank.direct == 0){
-                Game.canvasContext.lineTo(tank.x + 15, tank.y);
-            }else if(tank.direct == 2){
-                Game.canvasContext.lineTo(tank.x + 15, tank.y + 26);
-            }
-            Game.canvasContext.stroke();
-        break;
-        case 1:
-        case 3:
-            Game.canvasContext.fillStyle = tank.color[0];
-            Game.canvasContext.fillRect(tank.x, tank.y, 30, 6);
-            Game.canvasContext.fillRect(tank.x, tank.y + 20, 30, 6);
-            Game.canvasContext.fillRect(tank.x + 8, tank.y + 6, 14, 14);
-            //需要注意,画圆的时候需要重新开启路径
-            Game.canvasContext.fillStyle = tank.color[1];
-            Game.canvasContext.beginPath();
-            Game.canvasContext.arc(tank.x + 15, tank.y + 13, 4, 0, Math.PI*2, true);
-            Game.canvasContext.closePath();
-            Game.canvasContext.fill();
-            //画出炮筒(直线)
-            Game.canvasContext.strokeStyle = tank.color[1];
-            Game.canvasContext.lineWidth = 2;
-            Game.canvasContext.moveTo(tank.x + 15, tank.y + 13);
-            if(tank.direct == 1){
-                Game.canvasContext.lineTo(tank.x + 30, tank.y + 13);
-            }else if(tank.direct == 3){
-                Game.canvasContext.lineTo(tank.x, tank.y + 13);
-            }
-            Game.canvasContext.stroke();
-        break;
-    }
+function drawPlayer(player){
+    Game.canvasContext.drawImage(player.img, player.x, player.y, 30, 26);
 }
 
 //坦克移动
 function changeDirect(event){
     var e = event || window.event || arguments.callee.caller.arguments[0];
     var keycode = e.keyCode;
-    if(e && !boomsHavBo && Game.map[tank.pos.i][tank.pos.j] !== 'b' && footStep){  //防止踩雷继续移动
+    if(e && !boomsHavBo && Game.map[player.pos.i][player.pos.j] !== 'b' && footStep){  //防止踩雷继续移动
         switch(keycode){
             case 87:
-                tank.moveUp();
-                footStep--;
+                player.moveUp();
                 break;
             case 68:
-                tank.moveRight();
-                footStep--;
+                player.moveRight();
                 break;
             case 83:
-                tank.moveBottom();
-                footStep--;
+                player.moveBottom();
                 break;
             case 65:
-                tank.moveLeft();
-                footStep--;
+                player.moveLeft();
                 break;
             default:
                 break;
         }
     }
+}
+
+function alivePlayer(){
+    if(player.direct === 0){  //up
+        player.y += gridHeight;
+        player.pos.i += 1;
+    }
+    else if(player.direct === 1){ //right
+        player.x -= gridWidth;
+        player.pos.j -= 1;
+    }
+    else if(player.direct === 2){ //bottom
+        player.y -= gridHeight;
+        player.pos.i -= 1;
+    }
+    else if(player.direct === 3){ //left
+        player.x += gridWidth;
+        player.pos.j += 1;
+    }
+    playerAlive = true;
 }
 
 /*
@@ -276,7 +442,7 @@ function spread(booms){
 
 function drawExplode(){  
     Game.canvasContext.save();  
-    Game.canvasContext.translate(tank.pos.j * 30 + 15, tank.pos.i * 26 + 13);   
+    Game.canvasContext.translate(player.pos.j * 30 + 15, player.pos.i * 26 + 13);   
     var rg = Game.canvasContext.createRadialGradient(0, 0, 0, 40, 0, 40);  
     rg.addColorStop(0, '#ff0');  
     rg.addColorStop(1, '#f00');  
@@ -311,6 +477,7 @@ Game.start = function(){
     boom.boomMusic = new Audio();
     boom.boomMusic.src = "music/4737.wav";
     document.onkeydown = changeDirect; //键盘事件
+    changeShowLife();
     setTimeout(Game.mainLoop, 500);
 };
 
@@ -322,94 +489,32 @@ Game.gameOver = function(){
 Game.update = function(){
 	//更新事件
     //踩到雷，播放音乐及爆炸特效
-    if(Game.map[tank.pos.i][tank.pos.j] === 'b' && !boomsHavBo){
-        boom.boomMusic.play();
-        boomsHavBo = true;
+    if(playerAlive){
+        if(Game.map[player.pos.i][player.pos.j] === 'b' && !boomsHavBo){
+            boomsHavBo = true;
+            playerLife--;
+            changeShowLife();
+        }
     }
 };
 
 Game.draw = function(){
-    //填充矩形
-    Game.canvasContext.fillStyle = "#cccccc";
-    Game.canvasContext.strokeStyle = "#000";
-    var x = gridWidth + 0.5, y = 0;
-    //遍历map
-    for(var i = 0; i < Game.map.length; i++){
-        x = gridWidth + 0.5;
-        for(var j = 1; j < Game.map[i].length; j++){
-            if(Game.map[i][j] === 'r'){
-                Game.canvasContext.fillRect(x, y, gridWidth, gridHeight);
-                Game.canvasContext.beginPath();
-                Game.canvasContext.moveTo(x, y);
-                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
-                Game.canvasContext.moveTo(x, y + gridHeight);
-                Game.canvasContext.lineTo(x + gridWidth, y);
-                Game.canvasContext.moveTo(x, y);
-                Game.canvasContext.lineTo(x + gridWidth, y);
-                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
-                Game.canvasContext.lineTo(x, y + gridHeight);
-                Game.canvasContext.lineTo(x, y);
-                Game.canvasContext.closePath();
-                Game.canvasContext.stroke();
-            }
-            else if(Game.map[i][j] === 'b'){
-                pos.i = i;
-                pos.j = j;
-                boom.boomPos.push(pos);
-                Game.canvasContext.fillRect(x, y, gridWidth / 2, gridHeight / 2);
-                Game.canvasContext.stroke();
-            }
-            x += gridWidth;
-        }
-        y += gridHeight;
-    }
-
-    y = 0;
-    for(i = 0; i < Game.map.length; i++){
-        Game.canvasContext.fillRect(0, y, gridWidth, gridHeight);
-        Game.canvasContext.beginPath();
-        Game.canvasContext.moveTo(0, y);
-        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
-        Game.canvasContext.moveTo(0, y + gridHeight);
-        Game.canvasContext.lineTo(gridWidth, y);
-        Game.canvasContext.moveTo(0, y);
-        Game.canvasContext.lineTo(gridWidth, y);
-        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
-        Game.canvasContext.lineTo(0, y + gridHeight);
-        Game.canvasContext.lineTo(0, y);
-        Game.canvasContext.closePath();
-        y += gridHeight;
-        Game.canvasContext.stroke();
-    }
-    
-    //画网格线
-     for(var i = gridWidth + 0.5; i < Game.canvas.width; i += gridWidth){
-        Game.canvasContext.beginPath();
-        Game.canvasContext.lineWidth = 0.5;
-        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-        Game.canvasContext.moveTo(i, 0);
-        Game.canvasContext.lineTo(i, Game.canvas.height);
-        Game.canvasContext.closePath();
-        Game.canvasContext.stroke();
-    }
-    for(var i = gridHeight + 0.5;i < Game.canvas.height; i += gridHeight){
-        Game.canvasContext.beginPath();
-        Game.canvasContext.lineWidth = 0.5;
-        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-        Game.canvasContext.moveTo(0, i);
-        Game.canvasContext.lineTo(Game.canvas.width, i);
-        Game.canvasContext.closePath();
-        Game.canvasContext.stroke();
-    }
-
+    //画游戏地图
+    drawMap();  
+    //判断是否画爆炸效果
     if(boomsHavBo){
+        boom.boomMusic.play();
         drawExplode();
-        Game.gameOver();
+        playerAlive = false;
+        boomsHavBo = false;
+        //如果tank还有命，1秒后复活
+        if(playerLife){
+            setTimeout(alivePlayer, 1000);
+        }
     }
-    else{
-        //画tank
-        drawTank(tank);
-    }
+    if(playerAlive){
+        drawPlayer(player);
+    }  
 };
 
 Game.clearCanvas = function(){
@@ -420,7 +525,7 @@ Game.mainLoop = function(){
 	Game.clearCanvas();
 	Game.update();
 	Game.draw();
-	setTimeout(Game.mainLoop, 1000 / Game.ftps);
+    setTimeout(Game.mainLoop, 1000 / Game.ftps);
 };
 
 
