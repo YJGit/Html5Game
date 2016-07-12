@@ -1,4 +1,57 @@
 #clock{
   z-index: 2;
   position: fixed;
+  background-color: #EFE3D3;
+  width: 100px;
+  left: 10px;
+  top: 45px;
+  transform-origin: 50px -35px;
+  animation: spin 2s infinite linear forwards;
 }
+
+@keyframes spin{
+  0%{
+    transform: rotateZ(0deg);
+  }
+  25%{
+    transform: rotateZ(-20deg);
+  }
+  50%{
+    transform: rotateZ(0deg);
+  }
+  75%{
+    transform: rotateZ(20deg);
+  }
+  100%{
+    transform: rotateZ(0deg);
+  }
+}
+
+.left-rope, .right-rope{
+  position: absolute;
+  width: 57px;
+  height: 10px;
+  background-color: #333;
+  border-radius: 5px;
+}
+
+.left-rope{
+  transform-origin: left top;
+  transform: rotateZ(-30deg);
+}
+
+.right-rope{
+  transform-origin: right top;
+  transform: rotateZ(30deg);
+}
+
+.right-rope{
+  right: 0px;
+}
+
+.time-show{
+  color: #333;
+  font-size: 30px;
+}
+
+

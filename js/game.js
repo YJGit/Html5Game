@@ -25,6 +25,12 @@ var footStep = 10000;
 var playerLife = 3;
 var playerAlive = true; //标志tank是否复活完成或者存活
 
+//answered[i]表示编号为i的问题是否回答过，true表示回答过，false表示未回答过。
+var answered = new Array(20);
+for (var i = 0; i < answered.length; i++){
+  answered[i] = false;
+}
+
 /*
 *游戏地图绘制
 */
@@ -255,10 +261,6 @@ function drawMap(){
 *动态调整显示step
 *及生命
 */
-function changeShowSteps(){
-    var steps = document.getElementById("laber-hint");
-    steps.innerHTML = "You can Walk " + footStep + " Steps";
-}
 
 function changeShowLife(){
     var life = document.getElementById("tank-pic");
@@ -267,6 +269,77 @@ function changeShowLife(){
         life.innerHTML += "<img src='img/ninja1.png'/>";
     }
 }
+
+/*
+*位置对应问题及建议路径
+*/
+var tips = [
+    {
+        pos: 5.12,
+        ways: "go straight"
+    },
+    {
+        pos: 5.13,
+        ways: "go straight"
+    },
+    {
+        pos: 1.17,
+        ways: "go straight"
+    },
+    {
+        pos: 2.17,
+        ways: "go straight"
+    },
+    {
+        pos: 7.21,
+        ways: "go straight"
+    },
+    {
+        pos: 7.22,
+        ways: "go straight"
+    },
+    {
+        pos: 11.24,
+        ways: "go straight"
+    },
+    {
+        pos: 11.25,
+        ways: "go straight"
+    },
+    {
+        pos: 13.16,
+        ways: "go straight"
+    },
+    {
+        pos: 14.16,
+        ways: "go straight"
+    },
+    {
+        pos: 15.1,
+        ways: "go straight"
+    },
+    {
+        pos: 15.2,
+        ways: "go straight"
+    },
+    {
+        pos: 17.7,
+        ways: "go straight"
+    },
+    {
+        pos: 18.7,
+        ways: "go straight"
+    },
+    {
+        pos: 18.15,
+        ways: "go straight"
+    },
+    {
+        pos: 18.16,
+        ways: "go straight"
+    }
+];
+
 
 /*
 *绘制坦克
@@ -293,7 +366,7 @@ function play(x, y, direct, pos){
                     this.y = 0;
                 }
                 footStep--;
-                changeShowSteps();
+                
             }
             else{
                 this.pos.i +=1;
@@ -308,7 +381,7 @@ function play(x, y, direct, pos){
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
             this.x += 30;
             footStep--;
-            changeShowSteps();
+            
         }
         else{
             this.pos.j -= 1;
@@ -320,7 +393,7 @@ function play(x, y, direct, pos){
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
             this.y += 26;
             footStep--;
-            changeShowSteps();
+            
         }
         else{
             this.pos.i -= 1;
@@ -335,7 +408,7 @@ function play(x, y, direct, pos){
         if(Game.map[this.pos.i][this.pos.j] !== 'r'){
             this.x -= 30;
             footStep--;
-            changeShowSteps();
+            
         }
         else{
             this.pos.j += 1;
@@ -358,16 +431,91 @@ function changeDirect(event){
     if(e && !boomsHavBo && Game.map[player.pos.i][player.pos.j] !== 'b' && footStep){  //防止踩雷继续移动
         switch(keycode){
             case 87:
-                player.moveUp();
+                //踩中问题
+                if(Game.map[player.pos.i][player.pos.j] === 'q'){
+                    for(var questionNum = 0; questionNum < tips.length; questionNum++){
+                        if(tips[questionNum].pos === player.pos.i + 0.01 * player.pos.j){
+                            //问题没有回答
+                            if(!answered[questionNum]){
+                              currentQuestionOrder = questionNum;
+                              $('#step-button').trigger("click", [questionNum]);
+                            }
+                            else{  //已经回答
+                              player.moveUp();
+                            }
+                            break;
+                        }
+                    }   
+                }
+                else{
+                    player.moveUp();
+                }
                 break;
             case 68:
-                player.moveRight();
+                //踩中问题
+                if(Game.map[player.pos.i][player.pos.j] === 'q'){
+                    for(var questionNum = 0; questionNum < tips.length; questionNum++){
+                        if(tips[questionNum].pos === player.pos.i + 0.01 * player.pos.j){
+                          console.log("qn", tips[questionNum].pos);
+                            //问题没有回答
+                            console.log("I am condition 1, the quesNum is", questionNum);
+                            if(!answered[questionNum]){
+                              currentQuestionOrder = questionNum;
+                              $('#step-button').trigger("click", [questionNum]);
+                            }
+                          else{
+                            console.log("I am condition 2, the quesNum is", questionNum);
+                            player.moveRight();
+                          }
+                          break;
+                        }
+                    }   
+                }
+                else{
+                    player.moveRight();
+                }
                 break;
             case 83:
-                player.moveBottom();
+                //踩中问题
+                if(Game.map[player.pos.i][player.pos.j] === 'q'){
+                    for(var questionNum = 0; questionNum < tips.length; questionNum++){
+                        if(tips[questionNum].pos === player.pos.i + 0.01 * player.pos.j){
+                             //问题没有回答
+                            if(!answered[questionNum]){
+                              currentQuestionOrder = questionNum;
+                              $('#step-button').trigger("click", [questionNum]);
+                            }
+                          else{
+                            player.moveBottom();
+                          }
+                          break;
+                        }
+                    }   
+                }
+                else{
+                    player.moveBottom();
+                }
                 break;
             case 65:
-                player.moveLeft();
+            //踩中问题
+                if(Game.map[player.pos.i][player.pos.j] === 'q'){
+                    for(var questionNum = 0; questionNum < tips.length; questionNum++){
+                        if(tips[questionNum].pos === player.pos.i + 0.01 * player.pos.j){
+                             //问题没有回答
+                            if(!answered[questionNum]){
+                              currentQuestionOrder = questionNum;
+                              $('#step-button').trigger("click", [questionNum]);
+                            }
+                            else{
+                              player.moveLeft();
+                            }
+                            break;
+                        }
+                    }   
+                }
+                else{
+                    player.moveLeft();
+                }
                 break;
             default:
                 break;
