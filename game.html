@@ -1,14 +1,15 @@
 <!doctype html>
 <html>
   <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width initial-scale=1.0">
   <title>Game</title>
   <link rel="stylesheet" type="text/css" href="css/base.css">
   <link rel="stylesheet" type="text/css" href="css/game.css">
   <!--<link rel="stylesheet" type="text/css" href="css/loading.css">-->
   <!--<link rel="stylesheet" type="text/css" href="css/introduction.css">-->
-  <link rel="stylesheet" type="text/css" href="css/step.css">  
+  <link rel="stylesheet" type="text/css" href="css/step.css">
+  <link rel="stylesheet" type="text/css" href="css/question.css">    
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
   </head>
   <body>
@@ -50,9 +51,11 @@
     </div>
     -->
     
+    <!-- This is the part for choosing steps -->
     
     <input id="step-button" type="submit" class="btn btn-success btn-large" value="Random Step"/>
     
+    <!--
     <ul class="flip-cards">
       <li>
         <input class="front" style="background: #267df4" value="?"/>
@@ -71,14 +74,40 @@
         <input class="back" style="background: #e74853" value=""/>
       </li>
     </ul>
-  
+    -->
+    
+    <!-- This is the part for answering questions -->
+    
+    <div id="question-page">
+      <div class="ques-board">
+        <img class="logo-left" src="img/ninja.png"/>
+        <img class="logo-right" src="img/ninja.png"/>
+        <div class="paste-left"></div>
+        <div class="paste-right"></div>
+        <div class="knot">X</div>
+        <div class="ques-info">
+          <p></p>
+          <ul>
+            <li><input type="radio" name="answer" value="A" checked="checked"/><span></span></li>
+            <li><input type="radio" name="answer" value="B"/><span></span></li>
+            <li><input type="radio" name="answer" value="C"/><span></span></li>
+            <li><input type="radio" name="answer" value="D"/><span></span></li>
+          </ul>
+          <div class="way-tip"></div>
+          <input type="submit" class="btn btn-danger btn-sm go" value="→"/>
+        </div>
+      </div>
+    </div>
+    
+    
     <div id="gameArea">
       <canvas id="myCanvas" width="900px" height="1300px"></canvas>
     </div>
 
     <script src="js/jquery-1.12.3.js"></script>
+    <script src="js/question.js"></script>
     <script src="js/introduction.js"></script>
-    <script src="js/step.js"></script>  
+    <script src="js/step.js"></script> 
     <script type="text/javascript" src="js/game.js">你的浏览器不支持canvas</script>  
   </body>
 </html>

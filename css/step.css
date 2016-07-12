@@ -1,7 +1,8 @@
 #step-button{
   position: fixed;
   top: 20px;
-  right: 5px;
+  right: 20px;
+  z-index: 1;
 }
 
 .flip-cards{

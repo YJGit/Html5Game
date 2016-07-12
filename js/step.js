@@ -1,12 +1,19 @@
 $('.flip-cards li').on("click", function(){
-  $(this).parent().animate({opacity: "1"}, 500).animate({opacity: "0"}, 500);
+  $(this).parent().animate({opacity: "1"}, 500).animate({opacity: "0"}, 500); 
 });
 
-$('#step-button').on("click", function(){
-  var $flipCards = $('.flip-cards');
-  generateNumbersToCards($flipCards);
-  $flipCards.animate({opacity: "1"}, 500);
-});
+$("#step-button").on("click", function(){
+  console.log("I am 1");
+  //var $flipCards = $('.flip-cards');
+  //generateNumbersToCards($flipCards);
+  /* test code */
+  console.log("I am 2");
+  modifyWithQuestion(1);
+  var $questionBoard = $(".ques-board");
+  console.log("I got the question page.")
+  $questionBoard.animate({top: "50%"}, 500);
+  //$flipCards.animate({opacity: "1"}, 500);
+});  
 
 // Returns a random integer between min (included) and max (included)
 function getRandomInt(min, max) {
