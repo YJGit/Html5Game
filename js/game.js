@@ -7,9 +7,11 @@ var Game = {
     ftps: 60
 };
 
-//画tank
+//画玩家
 var player = new play(30.5, 0, 2, {i:0, j: 1});
-//记录地雷位置
+var playerLife = 3;
+var playerAlive = true; //标志玩家是否复活完成或者存活
+//地雷爆炸音乐
 var boom = {
     boomMusic: null
 };
@@ -22,250 +24,14 @@ var gridHeight = 26;
 var booms={}; 
 var boomsHavBo = false;  //标志是否已经炸过
 var footStep = 10000;
-var playerLife = 3;
-var playerAlive = true; //标志tank是否复活完成或者存活
 
 //answered[i]表示编号为i的问题是否回答过，true表示回答过，false表示未回答过。
 var answered = new Array(20);
 for (var i = 0; i < answered.length; i++){
   answered[i] = false;
 }
-
-/*
-*游戏地图绘制
-*/
-
-//地图 空-e 矩形-r 雷-b
-Game.map = [
-    'reerrrrrrrrrrrrrrrrrrrrrrrrrrr',
-    'reeeereeeeeeeereeqbeeeereeeeor',
-    'reeeereeeeeeeereeqeebeereeeeer',
-    'reerrreereereereerrrreereerrrr',
-    'reeeeeeereereereeeeereeeeeeeer',
-    'reeeeeeereerqqreeeeereeeeeeeer',
-    'rrrrrrrrrrrrebrrrreerbbrrreeer',
-    'reeeereeeeeeeereeeeeeqqreeeeer',
-    'reeeoreeeeeeeereeeeeeeereeeeer',
-    'rerrrreereereereerrrrrrreerrrr',
-    'rereeeeereereeeeeeereeeeeereer',
-    'rereeeeereereeeeeeereeeeqqreer',
-    'rereerrrreereerrrrrreeerbbreer',
-    'reeeereeeeereeeeqbeeeeereeeeer',
-    'reeeereeeeereeeeqbeeeeereeeeer',
-    'rqqeereerrrrrrrrrreerrrrrrreer',
-    'rbbrrreereeeeeeeereereeeeereer',
-    'reeeeeeqbeeeeeeebreereeeeereer',
-    'reeeeeeqbeerrrrqqeeeeeereeeeer',
-    'reerrrrrreereereeeeeeeereeeeer',
-    'reeeeeeereereerrrrrrrrrrrrrrrr',
-    'reeeeeeereeeeeeeeeeeeeeeeeeeer',
-    'reeeeeeereeeeeeeeeeeeeeeeeeeer',
-    'rrrrrrrrrrrrrrrrrrrrrrrrrrreer',
-    'reeeeeeeeebeereeeeeeeeeeeerqqr',
-    'reeeeeeeeebeereeeeeeeeeeeerber',
-    'reerrrrrrrrqqreerrrrrrrreeeeer',
-    'reereeeeeeeeereeeeeereereeeeer',
-    'reereeeeeeeeereeeeeereerrrreer',
-    'reereerrrrrrrrrrrreereeeeereer',
-    'reereeeeeeeeeeeeeeeereeeeereer',
-    'reereeeeeeeeeeeeeeeereeeeereer',
-    'reerrrrrrrrrrrrrrrrrreereereer',
-    'reereebqeeeeeeeeereeeeereeeeer',
-    'reereeeqeeeeeeeeereeeeereeeeer',
-    'reeeeereeeeerrreereerrrrrrrrrr',
-    'reeeeereeeeeeereereereeeeeeeer',
-    'reerrrrrrrrreereereerrrrrrreer',
-    'reereereqeereereereeeeeeeeeeer',
-    'reeeeereqeeeeereereeeeeeeeeeer',
-    'reeeeerbreeeeereerrrrrrrrrreer',
-    'rrrreeeerrrrrrrbeeeeeeeeeereer',
-    'reeeeeeereeeeeeqqrreeeerrrreer',
-    'reeeeeeereeeeeeeereeeeereeeeer',
-    'reerrrrrreerrrreerrrreereerrrr',
-    'rqqroeeereeeeereeeeerrrreereer',
-    'rebreeeerrreeereereeeeeeeeeeer',
-    'rebreeeeeeeeeeeeereeeeeeeeeeer',
-    'rebreeeeeeeeeeeeereeeeeeeeeeer',
-    'reerrrrrrrrrrrrrrrrrrrrrrrrrrr'
-];
-
-function drawMap(){
-    //填充矩形
-    Game.canvasContext.fillStyle = "#cccccc";
-    var x = gridWidth + 0.5, y = 0;
-    //遍历map
-    for(var i = 0; i < Game.map.length; i++){
-        x = gridWidth + 0.5;
-        for(var j = 1; j < Game.map[i].length; j++){
-            //画矩形
-            if(Game.map[i][j] === 'r'){
-                Game.canvasContext.strokeStyle = "#000";
-                Game.canvasContext.fillRect(x, y, gridWidth, gridHeight);
-                Game.canvasContext.beginPath();
-                Game.canvasContext.moveTo(x, y);
-                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
-                Game.canvasContext.moveTo(x, y + gridHeight);
-                Game.canvasContext.lineTo(x + gridWidth, y);
-                Game.canvasContext.moveTo(x, y);
-                Game.canvasContext.lineTo(x + gridWidth, y);
-                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
-                Game.canvasContext.lineTo(x, y + gridHeight);
-                Game.canvasContext.lineTo(x, y);
-                Game.canvasContext.closePath();
-                Game.canvasContext.stroke();
-            }
-            //画问题区
-            else if(Game.map[i][j] === 'q'){
-                /*
-                //画雷区提示范围
-                if(Game.map[i + 1][j] === 'q'){
-                    if(Game.map[i][j + 1] === 'b'){
-                        if(Game.map[i + 1][j + 3] === 'b'){
-                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                            Game.canvasContext.beginPath();
-                            Game.canvasContext.moveTo(x + gridWidth, y);
-                            Game.canvasContext.lineTo(x + gridWidth, y + gridHeight * 2);
-                            Game.canvasContext.moveTo(x + gridWidth * 4, y);
-                            Game.canvasContext.lineTo(x + gridWidth * 4, y + gridHeight * 2);
-                            Game.canvasContext.closePath();
-                            Game.canvasContext.stroke();
-                        }
-                        else{
-                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                            Game.canvasContext.beginPath();
-                            Game.canvasContext.moveTo(x + gridWidth, y);
-                            Game.canvasContext.lineTo(x + gridWidth, y + gridHeight * 2);
-                            Game.canvasContext.moveTo(x + gridWidth * 2, y);
-                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 2);
-                            Game.canvasContext.closePath();
-                            Game.canvasContext.stroke();
-                        }
-                    }
-                    else if(Game.map[i + 2][j - 1] === 'b'){
-                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                        Game.canvasContext.beginPath();
-                        Game.canvasContext.moveTo(x, y + gridHeight * 2);
-                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 2);
-                        Game.canvasContext.moveTo(x, y + gridHeight * 3);
-                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 3);
-                        Game.canvasContext.closePath();
-                        Game.canvasContext.stroke();
-                    }
-                    else if(Game.map[i][j - 1] === 'b'){
-                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                        Game.canvasContext.beginPath();
-                        Game.canvasContext.moveTo(x, y);
-                        Game.canvasContext.lineTo(x, y + gridHeight * 2);
-                        Game.canvasContext.moveTo(x - gridWidth, y);
-                        Game.canvasContext.lineTo(x - gridWidth, y + gridHeight * 2);
-                        Game.canvasContext.closePath();
-                        Game.canvasContext.stroke();
-                    }
-                }
-                else if(Game.map[i][j + 1] === 'q'){
-                    if(Game.map[i + 1][j + 1] === 'b' || Game.map[i + 1][j] === 'b'){
-                        if(Game.map[i + 3][j + 1] === 'b'){
-                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                            Game.canvasContext.beginPath();
-                            Game.canvasContext.moveTo(x, y + gridHeight);
-                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight);
-                            Game.canvasContext.moveTo(x, y + gridHeight * 4);
-                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 4);
-                            Game.canvasContext.closePath();
-                            Game.canvasContext.stroke();
-                        }
-                        else{
-                            Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                            Game.canvasContext.beginPath();
-                            Game.canvasContext.moveTo(x, y + gridHeight);
-                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight);
-                            Game.canvasContext.moveTo(x, y + gridHeight * 2);
-                            Game.canvasContext.lineTo(x + gridWidth * 2, y + gridHeight * 2);
-                            Game.canvasContext.closePath();
-                            Game.canvasContext.stroke();
-                        }
-                    }
-                    else if(Game.map[i - 1][j] === 'b' || Game.map[i - 1][j + 1] === 'b'){
-                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                        Game.canvasContext.beginPath();
-                        Game.canvasContext.moveTo(x, y);
-                        Game.canvasContext.lineTo(x + gridWidth * 2, y);
-                        Game.canvasContext.moveTo(x, y - gridHeight);
-                        Game.canvasContext.lineTo(x + gridWidth * 2, y - gridHeight);
-                        Game.canvasContext.closePath();
-                        Game.canvasContext.stroke();
-                    }
-                    else if(Game.map[i - 1][j - 1] === 'b'){
-                        Game.canvasContext.strokeStyle = "rgba(255, 0, 0, 0.5)";
-                        Game.canvasContext.beginPath();
-                        Game.canvasContext.moveTo(x, y);
-                        Game.canvasContext.lineTo(x, y - gridHeight * 2);
-                        Game.canvasContext.moveTo(x - gridWidth, y);
-                        Game.canvasContext.lineTo(x - gridWidth, y - gridHeight * 2);
-                        Game.canvasContext.closePath();
-                        Game.canvasContext.stroke();
-                    }
-                }
-                */
-            }
-            x += gridWidth;
-        }
-        y += gridHeight;
-    }
-
-    y = 0;
-    for(i = 0; i < Game.map.length; i++){
-        Game.canvasContext.fillRect(0, y, gridWidth, gridHeight);
-        Game.canvasContext.beginPath();
-        Game.canvasContext.moveTo(0, y);
-        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
-        Game.canvasContext.moveTo(0, y + gridHeight);
-        Game.canvasContext.lineTo(gridWidth, y);
-        Game.canvasContext.moveTo(0, y);
-        Game.canvasContext.lineTo(gridWidth, y);
-        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
-        Game.canvasContext.lineTo(0, y + gridHeight);
-        Game.canvasContext.lineTo(0, y);
-        Game.canvasContext.closePath();
-        y += gridHeight;
-        Game.canvasContext.stroke();
-    }
-    
-    //画网格线
-     for(var i = gridWidth + 0.5; i < Game.canvas.width; i += gridWidth){
-        Game.canvasContext.beginPath();
-        Game.canvasContext.lineWidth = 0.5;
-        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-        Game.canvasContext.moveTo(i, 0);
-        Game.canvasContext.lineTo(i, Game.canvas.height);
-        Game.canvasContext.closePath();
-        Game.canvasContext.stroke();
-    }
-    for(var i = gridHeight + 0.5;i < Game.canvas.height; i += gridHeight){
-        Game.canvasContext.beginPath();
-        Game.canvasContext.lineWidth = 0.5;
-        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-        Game.canvasContext.moveTo(0, i);
-        Game.canvasContext.lineTo(Game.canvas.width, i);
-        Game.canvasContext.closePath();
-        Game.canvasContext.stroke();
-    }
-}
-
-/*
-*动态调整显示step
-*及生命
-*/
-
-function changeShowLife(){
-    var life = $("#tank-pic img");
-    for(var i = 0; i < playerLife; i++){
-      life.eq(i).css({visibility: "visible"});
-    }
-    for (i = playerLife; i < 3; i++){
-      life.eq(i).css({visibility: "hidden"});
-    }
-}
+//是否重新开始完
+var playAgain = false;
 
 /*
 *位置对应问题及建议路径
@@ -385,11 +151,152 @@ var tips = [
     },
 ];
 
+/*
+*游戏地图绘制
+*/
+
+//地图 空-e 矩形-r 雷-b
+Game.map = [
+    'reerrrrrrrrrrrrrrrrrrrrrrrrrrr',
+    'reeeereeeeeeeereeqbeeeereeeeor',
+    'reeeereeeeeeeereeqeebeereeeeer',
+    'reerrreereereereerrrreereerrrr',
+    'reeeeeeereereereeeeereeeeeeeer',
+    'reeeeeeereerqqreeeeereeeeeeeer',
+    'rrrrrrrrrrrrebrrrreerbbrrreeer',
+    'reeeereeeeeeeereeeeeeqqreeeeer',
+    'reeeoreeeeeeeereeeeeeeereeeeer',
+    'rerrrreereereereerrrrrrreerrrr',
+    'rereeeeereereeeeeeereeeeeereer',
+    'rereeeeereereeeeeeereeeeqqreer',
+    'rereerrrreereerrrrrreeerbbreer',
+    'reeeereeeeereeeeqbeeeeereeeeer',
+    'reeeereeeeereeeeqbeeeeereeeeer',
+    'rqqeereerrrrrrrrrreerrrrrrreer',
+    'rbbrrreereeeeeeeereereeeeereer',
+    'reeeeeeqbeeeeeeebreereeeeereer',
+    'reeeeeeqbeerrrrqqeeeeeereeeeer',
+    'reerrrrrreereereeeeeeeereeeeer',
+    'reeeeeeereereerrrrrrrrrrrrrrrr',
+    'reeeeeeereeeeeeeeeeeeeeeeeeeer',
+    'reeeeeeereeeeeeeeeeeeeeeeeeeer',
+    'rrrrrrrrrrrrrrrrrrrrrrrrrrreer',
+    'reeeeeeeeebeereeeeeeeeeeeerqqr',
+    'reeeeeeeeebeereeeeeeeeeeeerber',
+    'reerrrrrrrrqqreerrrrrrrreeeeer',
+    'reereeeeeeeeereeeeeereereeeeer',
+    'reereeeeeeeeereeeeeereerrrreer',
+    'reereerrrrrrrrrrrreereeeeereer',
+    'reereeeeeeeeeeeeeeeereeeeereer',
+    'reereeeeeeeeeeeeeeeereeeeereer',
+    'reerrrrrrrrrrrrrrrrrreereereer',
+    'reereebqeeeeeeeeereeeeereeeeer',
+    'reereeeqeeeeeeeeereeeeereeeeer',
+    'reeeeereeeeerrreereerrrrrrrrrr',
+    'reeeeereeeeeeereereereeeeeeeer',
+    'reerrrrrrrrreereereerrrrrrreer',
+    'reereereqeereereereeeeeeeeeeer',
+    'reeeeereqeeeeereereeeeeeeeeeer',
+    'reeeeerbreeeeereerrrrrrrrrreer',
+    'rrrreeeerrrrrrrbeeeeeeeeeereer',
+    'reeeeeeereeeeeeqqrreeeerrrreer',
+    'reeeeeeereeeeeeeereeeeereeeeer',
+    'reerrrrrreerrrreerrrreereerrrr',
+    'rqqroeeereeeeereeeeerrrreereer',
+    'rebreeeerrreeereereeeeeeeeeeer',
+    'rebreeeeeeeeeeeeereeeeeeeeeeer',
+    'rebreeeeeeeeeeeeereeeeeeeeeeer',
+    'reerrrrrrrrrrrrrrrrrrrrrrrrrrr'
+];
+
+function drawMap(){
+    //填充矩形
+    Game.canvasContext.fillStyle = "#cccccc";
+    var x = gridWidth + 0.5, y = 0;
+    //遍历map
+    for(var i = 0; i < Game.map.length; i++){
+        x = gridWidth + 0.5;
+        for(var j = 1; j < Game.map[i].length; j++){
+            //画矩形
+            if(Game.map[i][j] === 'r'){
+                Game.canvasContext.strokeStyle = "#000";
+                Game.canvasContext.fillRect(x, y, gridWidth, gridHeight);
+                Game.canvasContext.beginPath();
+                Game.canvasContext.moveTo(x, y);
+                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
+                Game.canvasContext.moveTo(x, y + gridHeight);
+                Game.canvasContext.lineTo(x + gridWidth, y);
+                Game.canvasContext.moveTo(x, y);
+                Game.canvasContext.lineTo(x + gridWidth, y);
+                Game.canvasContext.lineTo(x + gridWidth, y + gridHeight);
+                Game.canvasContext.lineTo(x, y + gridHeight);
+                Game.canvasContext.lineTo(x, y);
+                Game.canvasContext.closePath();
+                Game.canvasContext.stroke();
+            }
+            x += gridWidth;
+        }
+        y += gridHeight;
+    }
+
+    y = 0;
+    for(i = 0; i < Game.map.length; i++){
+        Game.canvasContext.fillRect(0, y, gridWidth, gridHeight);
+        Game.canvasContext.beginPath();
+        Game.canvasContext.moveTo(0, y);
+        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
+        Game.canvasContext.moveTo(0, y + gridHeight);
+        Game.canvasContext.lineTo(gridWidth, y);
+        Game.canvasContext.moveTo(0, y);
+        Game.canvasContext.lineTo(gridWidth, y);
+        Game.canvasContext.lineTo(gridWidth, y + gridHeight);
+        Game.canvasContext.lineTo(0, y + gridHeight);
+        Game.canvasContext.lineTo(0, y);
+        Game.canvasContext.closePath();
+        y += gridHeight;
+        Game.canvasContext.stroke();
+    }
+    
+    //画网格线
+     for(var i = gridWidth + 0.5; i < Game.canvas.width; i += gridWidth){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(i, 0);
+        Game.canvasContext.lineTo(i, Game.canvas.height);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
+    for(var i = gridHeight + 0.5;i < Game.canvas.height; i += gridHeight){
+        Game.canvasContext.beginPath();
+        Game.canvasContext.lineWidth = 0.5;
+        Game.canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
+        Game.canvasContext.moveTo(0, i);
+        Game.canvasContext.lineTo(Game.canvas.width, i);
+        Game.canvasContext.closePath();
+        Game.canvasContext.stroke();
+    }
+}
 
 /*
-*绘制坦克
-*及坦克移动函数
-*坦克复活函数
+*动态调整显示step
+*及生命
+*/
+function changeShowLife(){
+    var life = $("#tank-pic img");
+    for(var i = 0; i < playerLife; i++){
+      life.eq(i).css({visibility: "visible"});
+    }
+    for (i = playerLife; i < 3; i++){
+      life.eq(i).css({visibility: "hidden"});
+    }
+}
+
+
+/*
+*绘制玩家
+*及玩家移动函数
+*玩家复活函数
 */
 function play(x, y, direct, pos){
     this.x = x;
@@ -469,7 +376,7 @@ function drawPlayer(player){
     Game.canvasContext.drawImage(player.img, player.x, player.y, 30, 26);
 }
 
-//坦克移动
+//玩家移动
 function changeDirect(event){
     var e = event || window.event || arguments.callee.caller.arguments[0];
     var keycode = e.keyCode;
@@ -569,6 +476,7 @@ function changeDirect(event){
     }
 }
 
+//复活玩家
 function alivePlayer(){
     if(player.direct === 0){  //up
         player.y += gridHeight;
@@ -664,7 +572,6 @@ function drawExplode(){
 /*
 *游戏逻辑流程
 */ 
-var playAgain = false;
 Game.start = function(){
 	Game.canvas = document.getElementById("myCanvas");
     Game.canvasContext = Game.canvas.getContext("2d");
@@ -718,7 +625,7 @@ Game.draw = function(){
         drawExplode();
         playerAlive = false;
         boomsHavBo = false;
-        //如果tank还有命，1秒后复活
+        //如果tank还有命，2秒后复活
         if(playerLife){
             setTimeout(alivePlayer, 1000);
         }
