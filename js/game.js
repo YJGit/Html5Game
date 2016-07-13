@@ -263,10 +263,12 @@ function drawMap(){
 */
 
 function changeShowLife(){
-    var life = document.getElementById("tank-pic");
-    life.innerHTML = "";
+    var life = $("#tank-pic img");
     for(var i = 0; i < playerLife; i++){
-        life.innerHTML += "<img src='img/ninja1.png'/>";
+      life.eq(i).css({visibility: "visible"});
+    }
+    for (i = playerLife; i < 3; i++){
+      life.eq(i).css({visibility: "hidden"});
     }
 }
 
@@ -276,68 +278,116 @@ function changeShowLife(){
 var tips = [
     {
         pos: 5.12,
-        ways: "go straight"
+        ways: "you'd better go straight"
     },
     {
         pos: 5.13,
-        ways: "go straight"
+        ways: "you'd better go left and go foreword"
     },
     {
         pos: 1.17,
-        ways: "go straight"
+        ways: "go down please and take careful"
     },
     {
         pos: 2.17,
-        ways: "go straight"
+        ways: "go straight please and take careful"
     },
     {
         pos: 7.21,
-        ways: "go straight"
+        ways: "go back and choose antherWay, I suggest"
     },
     {
         pos: 7.22,
-        ways: "go straight"
+        ways: "go back and choose antherWay, I suggest"
     },
     {
         pos: 11.24,
-        ways: "go straight"
+        ways: "go left, if you don.t do so, you'll die"
     },
     {
         pos: 11.25,
-        ways: "go straight"
+        ways: "go left, if you don.t do so, you'll die"
     },
     {
         pos: 13.16,
-        ways: "go straight"
+        ways: "go down please"
     },
     {
         pos: 14.16,
-        ways: "go straight"
+        ways: "you.d better go down"
     },
     {
-        pos: 15.1,
-        ways: "go straight"
+        pos: 15.01,
+        ways: "bad luck! go back and choose another way"
     },
     {
-        pos: 15.2,
-        ways: "go straight"
+        pos: 15.02,
+        ways: "bad luck! go back and choose another way"
     },
     {
-        pos: 17.7,
-        ways: "go straight"
+        pos: 17.07,
+        ways: "back back back, and you'll find a true way"
     },
     {
-        pos: 18.7,
-        ways: "go straight"
+        pos: 18.07,
+        ways: "back back back, and you'll find a true way"
     },
     {
         pos: 18.15,
-        ways: "go straight"
+        ways: "go straight and be brave"
     },
     {
         pos: 18.16,
-        ways: "go straight"
-    }
+        ways: "go left will be a better choose"
+    },
+    {
+        pos: 24.27,
+        ways: "go right way and life will be more easy"
+    },
+    {
+        pos: 24.28,
+        ways: "just go straight"
+    },
+    {
+        pos: 26.11,
+        ways: "you'd better go back"
+    },
+    {
+        pos: 26.12,
+        ways: "there is no way in front of you"
+    },
+    {
+        pos: 33.07,
+        ways: "walk down"
+    },
+    {
+        pos: 34.07,
+        ways: "straight will be fine"
+    },
+    {
+        pos: 38.08,
+        ways: "no way!!! go back!!!"
+    },
+    {
+        pos: 39.08,
+        ways: "you'd better go back"
+    },
+    {
+        pos: 42.15,
+        ways: "choose right way to go"
+    },
+    {
+        pos: 42.16,
+        ways: "go, go, go"
+    },
+    {
+        pos: 45.01,
+        ways: "go straight, don't dsseparture route"
+    },
+    {
+        pos: 45.02,
+        ways: "you'd better go left way"
+    },
 ];
 
 
@@ -495,6 +545,7 @@ function changeDirect(event){
                 else{
                     player.moveBottom();
                 }
+                console.log("I am down.");
                 break;
             case 65:
             //踩中问题
@@ -617,21 +668,35 @@ function drawExplode(){
 
 /*
 *游戏逻辑流程
-*/       
+*/ 
+var playAgain = false;
 Game.start = function(){
 	Game.canvas = document.getElementById("myCanvas");
     Game.canvasContext = Game.canvas.getContext("2d");
     boom.boomPos = [];
     boom.boomMusic = new Audio();
     boom.boomMusic.src = "music/4737.wav";
+    player.pos.i = 0;
+    player.pos.j = 1;
+    player.x = 30.5;
+    player.y = 0;
+    playerLife = 3;
+    playAgain = false;
     document.onkeydown = changeDirect; //键盘事件
+    
     changeShowLife();
     setTimeout(Game.mainLoop, 500);
 };
 
 Game.gameOver = function(){
     //gameover
+  $("#loser-button").trigger("click");
+  console.log("I lost all my lives.");
+}
 
+Game.gameWin = function(){
+   //game wind
+  $("#winner-button").trigger("click");
 }
 
 Game.update = function(){
@@ -647,7 +712,7 @@ Game.update = function(){
 };
 
 Game.draw = function(){
-    //画游戏地图
+    //画游戏地图dd
     drawMap();  
     //判断是否画爆炸效果
     if(boomsHavBo){
@@ -673,7 +738,13 @@ Game.mainLoop = function(){
 	Game.clearCanvas();
 	Game.update();
 	Game.draw();
-    setTimeout(Game.mainLoop, 1000 / Game.ftps);
+     //胜利
+    if(player.pos.i > 48){
+       Game.gameWin();
+     } 
+     else{
+     setTimeout(Game.mainLoop, 1000 / Game.ftps);
+    }
 };
 
 

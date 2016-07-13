@@ -1,4 +1,4 @@
-{
+var questionSet = {
 	"questions":[	{
 						"question": "What is the correct CSS syntax for making all the <span> elements bold?",
 						"choiceA": "span{text-size: bold}",
@@ -240,4 +240,4 @@
 						"answer": "A"	
 					}
 				]
-}
+};

@@ -6,28 +6,29 @@
   <title>Maze Game For Front-end Tests</title>
   <link rel="stylesheet" type="text/css" href="css/base.css">
   <link rel="stylesheet" type="text/css" href="css/game.css">
-  <!--<link rel="stylesheet" type="text/css" href="css/loading.css">
-  <link rel="stylesheet" type="text/css" href="css/introduction.css">-->
+  <link rel="stylesheet" type="text/css" href="css/loading.css">
+  <link rel="stylesheet" type="text/css" href="css/introduction.css">
      
   <link rel="stylesheet" type="text/css" href="css/clock.css">
 
   <link rel="stylesheet" type="text/css" href="css/step.css">
   <link rel="stylesheet" type="text/css" href="css/question.css">    
-
+  <link rel="stylesheet" type="text/css" href="css/loser.css"> 
+  <link rel="stylesheet" type="text/css" href="css/winner.css">  
   <link rel="stylesheet" type="text/css" href="css/stepHint.css">  
   <link rel="stylesheet" type="text/css" href="css/life.css">
   </head>
   <body>
     
     <!-- This part controls the loading page -->
-    <!--
+    
     <div id="loading">
       <div class="loading-pic">
         <img src="img/ninja.png">
         <div class="banner">
           <div class="button-left">+</div>
           <div class="button-right">+</div>
-          <h1>Maze Game For Front-end</h1>
+          <h1>Front-end Tricky Maze</h1>
           <p>Beginning Soon ...</p>
           <div class="loading-bar">
             <div class="progress"></div>
@@ -35,9 +36,9 @@
         </div>
       </div>
     </div>
-    -->
+    
     <!-- This part controls the introduction page -->
-    <!--
+    
     <div id="introduction">
       <div class="intro-board">
         <img class="logo-left" src="img/ninja.png">
@@ -55,12 +56,17 @@
         <div class="intro-button">X</div>
       </div>
     </div>
-    -->
+    
+    
+    <audio preload="preload" loop="loop">
+     <source src="music/melody.mp3" preload="preload" loop="loop" type="audio/mpeg">
+    </audio>
+
     
     <div id="clock">
       <div class="left-rope"></div>
       <div class="right-rope"></div>
-      <div class="time-show">11:00</div>
+      <div class="time-show">00':00"</div>
     </div>
     
     <!-- This is the part for choosing steps -->
@@ -73,8 +79,6 @@
       <div class="ques-board">
         <img class="logo-left" src="img/ninja.png"/>
         <img class="logo-right" src="img/ninja.png"/>
-        <div class="paste-left"></div>
-        <div class="paste-right"></div>
         <div class="knot">X</div>
         <div class="ques-info">
           <p></p>
@@ -85,14 +89,47 @@
             <li><input type="radio" name="answer" value="D"/><span></span></li>
           </ul>
           <div class="way-tip"></div>
-          <input type="submit" class="btn btn-danger btn-sm go" value="→"/>
+          <input type="submit" class="go" value="→"/>
+        </div>
+      </div>
+    </div>
+    
+    <input id="loser-button" type="submit" class="btn btn-success btn-large" value="Loser Page"/>
+    
+    <div id="loser">
+      <div class="loser-pic">
+        <img src="img/ninja.png">
+        <div class="banner">
+          <div class="button-left">+</div>
+          <div class="button-right">+</div>
+          <p>Sorry, you didn't pass the maze.</p>
+          <a>Try Again</a>
+        </div>
+      </div>
+    </div>
+    
+    <input id="winner-button" type="submit" class="btn btn-success btn-large" value="Winner Page"/>
+    
+    <div id="winner">
+      <div class="winner-pic">
+        <img src="img/ninja.png">
+        <div class="banner">
+          <div class="button-left">+</div>
+          <div class="button-right">+</div>
+          <p>Congratulatios! You pass the maze!</p>
+          <p class="achievement">Time you spend is : </p>
+          <a>Try Again</a>
         </div>
       </div>
     </div>
 
     <span id="tank-life">
       Life:
-      <span id="tank-pic"></span> 
+      <span id="tank-pic">
+        <img src='img/ninja1.png'/>
+        <img src='img/ninja1.png'/>
+        <img src='img/ninja1.png'/>
+      </span> 
     </span>
 
     <div id="gameArea">
@@ -100,9 +137,12 @@
     </div>
 
     <script src="js/jquery-1.12.3.js"></script>
+    <script src="js/data.js"></script>
     <script src="js/question.js"></script>
     <script src="js/introduction.js"></script>
     <script src="js/step.js"></script> 
+    <script src="js/loser.js"></script> 
+    <script src="js/winner.js"></script> 
     <script type="text/javascript" src="js/game.js">你的浏览器不支持canvas</script>  
   </body>
 </html>

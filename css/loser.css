@@ -1,0 +1,45 @@
+#loser{
+  z-index: 6;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.8);
+  text-align: center;
+  display: none;
+}
+
+
+.loser-pic{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  width: 500px;
+  text-align: center;
+}
+
+.loser-pic p{
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.loser-pic a{
+  padding: 5px;
+  height: 30px;
+  border-radius: 5px;
+  line-height: 30px;
+  color: white;
+  background-color: #D9534F;
+  cursor: pointer;
+}
+
+#loser-button{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  z-index: 1;
+}
