@@ -114,15 +114,9 @@ function drawMap(){
                 Game.canvasContext.closePath();
                 Game.canvasContext.stroke();
             }
-            //画炸弹
-            else if(Game.map[i][j] === 'b'){
-                Game.canvasContext.fillRect(x, y, gridWidth / 2, gridHeight / 2);
-                Game.canvasContext.stroke();
-            }
             //画问题区
             else if(Game.map[i][j] === 'q'){
-                Game.canvasContext.fillRect(x, y, gridWidth / 4, gridHeight / 4);
-                Game.canvasContext.stroke();
+                /*
                 //画雷区提示范围
                 if(Game.map[i + 1][j] === 'q'){
                     if(Game.map[i][j + 1] === 'b'){
@@ -212,6 +206,7 @@ function drawMap(){
                         Game.canvasContext.stroke();
                     }
                 }
+                */
             }
             x += gridWidth;
         }
@@ -682,6 +677,9 @@ Game.start = function(){
     player.y = 0;
     playerLife = 3;
     playAgain = false;
+    for (var i = 0; i < answered.length; i++){
+      answered[i] = false;
+    }
     document.onkeydown = changeDirect; //键盘事件
     
     changeShowLife();
@@ -723,6 +721,9 @@ Game.draw = function(){
         //如果tank还有命，1秒后复活
         if(playerLife){
             setTimeout(alivePlayer, 1000);
+        }
+        else{
+            Game.gameOver();
         }
     }
     if(playerAlive){
