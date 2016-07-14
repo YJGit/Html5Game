@@ -1,0 +1,109 @@
+#introduction{
+  z-index: 3;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 1s 11.5s ease-in forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+
+.intro-board{
+  position: relative;
+  width: 600px;
+  height: 500px;
+  border: 20px solid #F65E3B;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 80px;
+}
+
+.intro-board .logo-left{
+  position: absolute;
+  top: -90px;
+  left: -160px;
+  transform: rotateZ(-45deg);
+}
+
+.intro-board .logo-right{
+  position: absolute;
+  top: -90px;
+  right: -160px;
+  transform: rotateZ(45deg) rotateY(180deg);
+}
+
+.paste-left, .paste-right{
+  position: absolute;
+  width: 230px;
+  height: 30px;
+  border-radius: 10px;
+  top: -38px;
+  background-color: #333;
+}
+
+.paste-left{
+  left: -135px;
+  transform: rotateZ(-45deg);
+}
+
+.paste-right{
+  right: -135px;
+  transform: rotateZ(45deg);
+}
+
+.intro-info{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.intro-info > *{
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.intro-info h1{
+  justify-content: center;
+}
+
+.intro-info h1 span{
+  font-size: 30px;
+  text-indent: 0;
+}
+
+.intro-info span{
+  color: white;
+  text-align: left;
+  text-indent: 2em;
+}
+
+.intro-button{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.intro-button:hover{
+  color: #F65E3B;
+}
+
+
+
+

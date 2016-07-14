@@ -1,0 +1,117 @@
+#loading{
+  z-index: 5;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-color: #222222;
+  text-align: center;
+  animation: dragdown 1s 10s ease-in forwards;
+}
+
+@keyframes dragdown{
+  from{
+    top: 0;
+  }
+  to{
+    top: 100%;
+  }
+}
+
+.loading-pic{
+  position: fixed;
+  top: -50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  width: 500px;
+  text-align: center;
+  animation: drop 1s 2s ease-in forwards,
+             popup 0.5s 10s ease-in forwards;
+}
+
+@keyframes drop{
+  0%{
+    top: -50%;
+  }
+  70%{
+    top: 60%;
+  }
+  100%{
+    top: 50%;
+  }
+}
+
+@keyframes popup{
+  from{
+    top: 50%;
+  }
+  to{
+    top: -50%;
+  }
+}
+
+.banner{
+  background-color: #EFE3D3;
+  padding-bottom: 20px;
+  position: relative;
+  top: -37px;
+}
+
+.banner .button-left, .banner .button-right{
+  position: absolute;
+  display: inline-block;
+  line-height: 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #333;
+  color: white;
+  font-size: 20px;
+}
+
+.button-left{
+  top:5px;
+  left: 5px;
+}
+
+.button-right{
+  top: 5px;
+  right: 5px;
+}
+
+.banner h1{
+  padding: 20px 0;
+  font-size: 48px;
+}
+
+.banner p{
+  padding: 10px 0;
+  font-size: 18px;
+}
+
+.banner .loading-bar{
+  width: 350px;
+  height: 20px;
+  border: 4px solid #333;
+  margin: 10px auto;
+}
+
+.loading-bar .progress{
+  width: 0%;
+  height: 100%;
+  background-color: #333;
+  animation: progress 5s 4s forwards;
+}
+
+@keyframes progress{
+  from{
+    width: 0%;
+  }
+  to{
+    width: 100%;
+  }
+}
+
+
